@@ -1,7 +1,7 @@
 package com.example.testesaula2.service;
 
 import com.example.testesaula2.model.Produto;
-import com.example.testesaula2.repository.ProdutoRespository;
+import com.example.testesaula2.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,18 +9,18 @@ import java.util.List;
 @Service
 public class ProdutoService {
 
-    private final ProdutoRespository produtoRespository;
+    private final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRespository produtoRespository) {
-        this.produtoRespository = produtoRespository;
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
     }
 
 
     public List<Produto> retornaProdutos(){
-        return produtoRespository.findAll();
+        return produtoRepository.findAll();
     }
 
     public Produto salvaProduto(Produto produto){
-        return produtoRespository.save(produto);
+        return produtoRepository.save(produto);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.testesaula2.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "produto")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
