@@ -12,19 +12,19 @@ import java.util.List;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository ClienteRepository;
+    private final ClienteRepository clienteRepository;
 
     public ClienteService(ClienteRepository ClienteRepository) {
-        this.ClienteRepository = ClienteRepository;
+        this.clienteRepository = ClienteRepository;
     }
 
 
     public List<Cliente> buscaTodosClientes(){
-        return this.ClienteRepository.findAll();
+        return this.clienteRepository.findAll();
     }
 
     public Cliente salvarCliente(ClienteRequest cliente){
-        return this.ClienteRepository.save(new Cliente(cliente.getNomeCliente(), cliente.getSaldoCliente()));
+        return this.clienteRepository.save(new Cliente(cliente.getNomeCliente(), cliente.getSaldoCliente()));
     }
 
     public Cliente atualizarCliente(Long id, ClienteRequest clienteNovo){
@@ -34,17 +34,17 @@ public class ClienteService {
         }
         clienteAtual.setNomeCliente(clienteNovo.getNomeCliente());
         clienteAtual.setSaldoCliente(clienteNovo.getSaldoCliente());
-        return this.ClienteRepository.save(clienteAtual);
+        return this.clienteRepository.save(clienteAtual);
     }
 
     public Cliente buscaClientePorId (Long id){
-        return this.ClienteRepository.findById(id).orElse(null);
+        return this.clienteRepository.findById(id).orElse(null);
     }
 
     public void detelaClientePorId(Long id){
         if (buscaClientePorId(id) == null){
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"Cliente não encontrado para o ID "+id);
         }
-        this.ClienteRepository.deleteById(id);
+        this.clienteRepository.deleteById(id);
     }
 }
