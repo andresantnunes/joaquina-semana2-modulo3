@@ -2,7 +2,7 @@ package com.example.testesaula2.controller;
 
 import com.example.testesaula2.model.Produto;
 import com.example.testesaula2.repository.ProdutoRepository;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +31,23 @@ class ProdutoControllerTest {
             // diferente do @Mock
     ProdutoRepository produtoRepository; //permite gerar respostas falsas do produto repository durante a execução do teste
 
+//    @BeforeEach // executa antes de cada teste
+//    public void antesDeCada(){
+//        System.out.println("Antes do Teste");
+//    }
+//    @AfterEach // executa depois de cada teste
+//    public void depoisDeCada(){
+//        System.out.println("Depois do Teste");
+//    }
+//
+//    @BeforeAll // executa antes de qualquer teste
+//    public void antesDeTudo(){
+//        System.out.println("Antes de Tudo");
+//    }
+//    @AfterAll // executa depois de tudo
+//    public void depoisdeTudo(){
+//        System.out.println("Depois do Tudo");
+//    }
 
     @Test // teste de Integração
     // integra o lado de fora da nossa aplicação com o que está dentro
@@ -48,7 +66,7 @@ class ProdutoControllerTest {
                                 .content().json(
                                         """
                                                   []
-                                                  """
+                                                     """
                                 )); // valida se o conteúdo é um json
 
     }
@@ -85,6 +103,40 @@ class ProdutoControllerTest {
     }
 
     @Test
-    void testSalvaProduto() {
+    void testSalvaProduto() throws Exception {
+        Produto produto = new Produto(1L,"Produto",10.0);// é o resultado da chamada ao banco de dados
+
+        // sempre que o findById for chamado o resultado será um Optional de produto
+        when(produtoRepository.save(any())).thenReturn(produto);
+
+        mockMvc.perform(  // executa uma requisição
+                        MockMvcRequestBuilders                      //cria uma requisição
+                                .post("/produtos")         // chama o endpoint /produtos/1 com um GET
+                                .accept(MediaType.APPLICATION_JSON) // eu espero como resposta um JSON
+                                .contentType(MediaType.APPLICATION_JSON) // a requisição irá enviar um JSON como corpo de requisição
+                                .content(
+                                        """
+                                           {
+                                               "nomeProduto":"Produto",
+                                               "valorProduto":10.0
+                                           }
+                                        """
+                                )
+                )
+                .andExpect(    //validação do resultado da chamada
+                        MockMvcResultMatchers // é o resultado da chamada realizada dentro do perform
+                                .status().isOk() // validação se o status da resposta é OK (200)
+                )
+                .andExpect( // validação do resultado da chamada
+                        MockMvcResultMatchers
+                                .content().json(
+                                        """
+                                                  {
+                                                        "id": 1,
+                                                        "nomeProduto": "Produto",
+                                                        "valorProduto": 10.0
+                                                  }
+                                                  """
+                                )); // valida se o conteúdo é um json
     }
 }
